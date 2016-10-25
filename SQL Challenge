@@ -1,0 +1,135 @@
+import sqlite3
+
+i = 1
+
+conn = sqlite3.connect('Cars.sqlite')
+
+def create_top50_db():
+    with conn:
+        conn.execute("CREATE TABLE Cars(id INTEGER PRIMARY KEY, Name TEXT, TopSpeed INT)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Porsche 918 Spyder', 340)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Dodge Viper SRT 10',190)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Mosler MT900',190)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Corvette Z06',190)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Aston Martin V12 Vantage',190)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('43 Aston Martin DB9',190)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Aston Martin DB9',190)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Cadillac CTS-V',191)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Aston Martin DBS',191)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Porsche 911 Turbo',193)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Nissan Gt-R',193)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('TVR Tuscan',195)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Lamborghini Gallardo Superleggera',196)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ferrari F430',196)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Audi R8 V10',196)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Alpina B5 S',197)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ferrari 612 Scaglietti',199)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Bentley Flying Spur Speed',200)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Bentley Continental GT',200)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ascari KZ1',200)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ferrari F40',201)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Lamborghini Gallardo LP 560-4',202)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ferrari 575m',202)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ferrari F50',202)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Porsche 911 GT2',204)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Corvette ZR1',205)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ferrari 599GTB',205)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Maserati MC12',205)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ford GT',205)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Caparo T1',205)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('BMW M5',205)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Mercedes Benz SLR Mclaren',207)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Porsche Carrera GT',209)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Lamborghini Diablo GT',211)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Lamborghini Murcielago LP 640',213)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Pagani Zonda F',215)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ferrari Enzo',217)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Gumpert Apollo',224)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Bristol Fighter T',225)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Jaguar XJ220',227)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Ultima GT-R640',231)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('TVR Cebera Speed 12',240)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Mclaren F1',240)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Koenigsegg CCX',241)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Saleen S7 Twin Turbo',248)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Bugatti Veyron',253)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('Koenigsegg CCXR',254)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('9ff GT9',254)")
+        conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES('SSC Ultimate Aero',257)")
+
+def print_all_cars():
+    with conn:
+        cur = conn.execute("SELECT id, Name, TopSpeed from Cars")
+
+        for row in cur:
+            print("ID: ", row[0])
+            print("Name: ",row[1])
+            print("Top Speed: ", row[2],"mph\n")
+        print("The End")
+
+def print_one_row():
+        with conn:
+            PrintCar = input("Car ID: ")
+            cur = conn.execute("SELECT id, Name, TopSpeed FROM Cars WHERE id = ?",(PrintCar,))
+            row = cur.fetchone()
+            print()
+            print("ID",row[0], "Name",row[1], "TopSpeed",row[2],"mph")
+
+def search_by_speed():
+   MinSpeed = input("I want a car faster than: ")
+   with conn:
+       cur = conn.execute("SELECT TopSpeed, Name FROM Cars WHERE TopSpeed>? ORDER BY TopSpeed", (MinSpeed,))
+       cur = conn.execute("SELECT TopSpeed, Name FROM Cars WHERE TopSpeed>? ORDER BY TopSpeed DESC", (MinSpeed,))
+       for row in cur:
+           print(row[0],"mph ",row[1])
+
+def add_car():
+   with conn:
+       NewCarName = input("Car Name: ")
+       NewCarSpeed = input("Top Speed of car: ")
+       conn.execute("INSERT INTO Cars(Name,TopSpeed) VALUES(?,?)", (NewCarName,NewCarSpeed))
+
+def del_car():
+   with conn:
+       DeleteCar = input("Car ID for deletion:")
+       conn.execute("DELETE FROM Cars WHERE id = ?", (DeleteCar,))
+
+def update_a_car():
+    with conn:
+        update_car = input("Car id to update:")
+        cur = conn.execute("SELECT id, Name, TopSpeed FROM Cars WHERE id = ?", (update_car,))
+        row = cur.fetchone()
+        print ("ID:",row[0],"Name:",row[1],"Top Speed:",row[2],"mph")
+        car_top_speed = input("The new top speed is:")
+        conn.execute("UPDATE Cars SET TopSpeed=? WHERE id=?", (car_top_speed, update_car))
+
+def main():
+    print("Welcome to the top 50 cars SQL database UI")
+    print("Programmed by: Sam Thompson")
+    print()
+    print("[1] Print all cars")
+    print("[2] Print one row")
+    print("[3] Search by speed")
+    print()
+    print("[0] Exit")
+
+
+    while i > 0:
+        print()
+        print()
+        choice = int(input("Option Selection: "))
+        print()
+        if choice == 1:
+            print_all_cars()
+        elif choice == 2:
+            print_one_row()
+        elif choice == 3:
+            search_by_speed()
+        elif choice == 0:
+            print("Thank you for using the SQL Database UI")
+            break
+        else:
+            print("Please enter a valid option")
+
+
+main()
