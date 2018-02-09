@@ -1,2 +1,2 @@
 # A-Level-Python-Challenges
-A set of challenges set during my AS/A2 course by my teacher in one repository.
+General programming tasks that were done that had a direct contribution to my A level computer science course.
